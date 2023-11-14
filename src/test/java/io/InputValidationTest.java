@@ -1,4 +1,4 @@
-package IO;
+package io;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -7,8 +7,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class InputValidationTest {
 
@@ -116,6 +114,24 @@ class InputValidationTest {
         List<Integer> dishNum = Arrays.asList(1,2,3,4);
 
         boolean result = InputValidation.dishNumUnder20(dishNum);
+
+        Assertions.assertThat(result).isEqualTo(true);
+    }
+
+    @Test
+    void 음료만_주문() {
+        List<String> dishName = Arrays.asList("제로콜라","레드와인");
+
+        Assertions.assertThatThrownBy(() -> InputValidation.orderOnlyDrink(dishName))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 음료만 주문 시, 주문할 수 없습니다.");
+    }
+
+    @Test
+    void 다양한_종류_주문() {
+        List<String> dishName = Arrays.asList("제로콜라", "초코케이크", "티본스테이크");
+
+        boolean result = InputValidation.orderOnlyDrink(dishName);
 
         Assertions.assertThat(result).isEqualTo(true);
     }
