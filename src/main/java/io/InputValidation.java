@@ -1,12 +1,14 @@
-package IO;
+package io;
 
-import IO.UserInput.*;
+import enums.Menu;
 
 import java.util.*;
 
 public class InputValidation {
     static final int eventStartDate = 1;
     static final int eventFinishDate = 31;
+    static final int maxOrderNum = 20;
+    static final int minOrderNum = 1;
     public static int isItInt(String readVisitDate) {
         int visitDate;
         try {
@@ -58,7 +60,7 @@ public class InputValidation {
                 throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
             }
             dishNum.add(dishNumber);
-            if (dishNumber < 1)
+            if (dishNumber < minOrderNum)
                 throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
         }
         return dishNum;
@@ -66,8 +68,22 @@ public class InputValidation {
 
 
     public static boolean dishNumUnder20(List<Integer> dishNum) {
-        if (dishNum.stream().mapToInt(Integer::intValue).sum() > 20)
+        if (dishNum.stream().mapToInt(Integer::intValue).sum() > maxOrderNum)
             throw new IllegalArgumentException("[ERROR] 메뉴는 한 번에 최대 20개까지만 주문할 수 있습니다.");
+        return true;
+    }
+
+    public static boolean orderOnlyDrink(List<String> dishNames) {
+        Menu menu;
+        Set<String> menuType = new HashSet<>();
+
+        for (String dishName : dishNames) {
+            menu = Menu.menuMatch.get(dishName);
+            menuType.add(menu.getType());
+        }
+
+        if (menuType.size() == 1 && menuType.contains("Drink"))
+            throw new IllegalArgumentException("[ERROR] 음료만 주문 시, 주문할 수 없습니다.");
         return true;
     }
 }
